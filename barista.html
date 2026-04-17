@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Caja - BRUNA</title>
+
+    <link rel="manifest" href="manifest-barista.json">
+    <meta name="theme-color" content="#35251A">
+    <link rel="apple-touch-icon" href="icon.png">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Varela+Round&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/html5-qrcode"></script>
+    <style>
+        :root {
+            var(--bg-warm): #F8F4E6; 
+            --card-white: #FDFAF0; 
+            --brand-dark: #35251A; 
+            --brand-gradient: linear-gradient(135deg, #3A2A1E 0%, #1A110A 100%);
+            --brand-light: #F2E3A4; 
+            --text-main: #35251A;
+            --text-secondary: #8C7A6B;
+            --border-warm: #E6DED5;
+            --glass-bg: rgba(253, 250, 240, 0.95); 
+        }
+
+        body {
+            background-color: #F8F4E6;
+            color: var(--text-main);
+            font-family: 'Varela Round', sans-serif; 
+            text-align: center; margin: 0; padding: 0;
+            display: flex; flex-direction: column; align-items: center;
+            min-height: 100vh;
+        }
+
+        .main-container { width: 100%; max-width: 400px; padding: 20px; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; }
+
+        .card-header h1 { font-family: 'Lilita One', cursive; font-size: 26px; color: var(--brand-dark); margin: 0; letter-spacing: 1px; }
+
+        .modern-card { background-color: var(--card-white); border-radius: 28px; box-shadow: 0 10px 30px rgba(53, 37, 26, 0.08); padding: 30px 25px; width: 100%; box-sizing: border-box; margin-bottom: 20px; border: 1px solid rgba(230, 222, 213, 0.5); }
+
+        /* --- LOGIN --- */
+        #pantallaLogin { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: #F8F4E6; z-index: 2000; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 40px; box-sizing: border-box; }
+        .pin-input { padding: 20px; border-radius: 16px; border: 2px solid var(--border-warm); font-size: 32px; text-align: center; width: 100%; max-width: 200px; margin-bottom: 30px; letter-spacing: 10px; font-weight: bold; color: var(--brand-dark); font-family: monospace; background-color: var(--card-white); transition: all 0.3s; }
+        .pin-input:focus { border-color: var(--brand-dark); outline: none; box-shadow: 0 0 10px rgba(53, 37, 26, 0.15); }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-10px); } 75% { transform: translateX(10px); } }
+        .error-shake { animation: shake 0.4s; border-color: #E74C3C !important; color: #E74C3C;}
+
+        /* --- BÚSQUEDA --- */
+        #reader { width: 80%; max-width: 240px; margin: 0 auto 20px auto; border-radius: 20px; overflow: hidden; border: none; background-color: #000; box-shadow: inset 0 0 20px rgba(0,0,0,0.3); border: 4px solid var(--brand-dark); }
+        #reader button { background-color: var(--brand-dark); color: var(--brand-light); border: none; padding: 12px 20px; border-radius: 14px; font-family: 'Varela Round', sans-serif; font-weight: 600; cursor: pointer; margin: 20px; }
+        
+        .separador { margin: 30px 0 20px 0; color: var(--text-secondary); font-size: 11px; text-transform: uppercase; letter-spacing: 2px; font-weight: 600;}
+        .input-manual-group { display: flex; flex-direction: column; gap: 12px; width: 100%;}
+        .input-manual-group input { width: 100%; padding: 18px; border-radius: 14px; border: 1.5px solid var(--border-warm); font-size: 16px; background-color: var(--card-white); color: var(--text-main); transition: all 0.2s; box-sizing: border-box; text-align: center; font-weight: 600; font-family: monospace; }
+        .input-manual-group input:focus { border-color: var(--brand-dark); background-color: #fff;}
+        .btn-buscar-manual { width: 100%; background-color: #E6DED5; color: var(--brand-dark); border: none; padding: 16px; border-radius: 14px; font-weight: 600; cursor: pointer; transition: background 0.2s; font-size: 15px; font-family: 'Varela Round', sans-serif; }
+        .btn-buscar-manual:active { background-color: #D5CCC3; }
+
+        /* --- ACCIONES (MODAL CENTRAL) --- */
+        #pantallaAcciones { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(53, 37, 26, 0.6); z-index: 1000; display: none; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box; backdrop-filter: blur(5px); }
+        .acciones-content { width: 100%; max-width: 360px; background: var(--glass-bg); border-radius: 28px; padding: 30px; box-sizing: border-box; box-shadow: 0 20px 60px rgba(0,0,0,0.25); color: var(--text-main); text-align: center; border: 1px solid var(--brand-light); animation: modalPop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        @keyframes modalPop { from {opacity: 0; transform: scale(0.8);} to {opacity: 1; transform: scale(1);} }
+
+        .cliente-info-header { display: flex; flex-direction: column; align-items: center; gap: 12px; margin-bottom: 25px; }
+        .cliente-avatar { width: 60px; height: 60px; background-color: var(--brand-light); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 700; color: var(--brand-dark); border: 2px solid var(--brand-dark); }
+        .cliente-nombre { font-size: 20px; font-weight: 700; color: var(--text-main); }
+        .cliente-tel { color: var(--text-secondary); font-size: 13px; font-family: monospace; margin-top: 2px; display: block;}
+        
+        .estado-sellos-container { background-color: #FFFDF7; border-radius: 20px; padding: 20px; margin-bottom: 25px; display: flex; flex-direction: column; justify-content: center; align-items: center; border: 2px dashed var(--border-warm); }
+        .estado-sellos-texto { font-size: 13px; color: var(--text-secondary); margin-bottom: 5px; font-weight: 600;}
+        .estado-sellos-numero { color: var(--brand-dark); font-weight: 700; font-size: 42px; line-height: 1; font-family: 'Lilita One', cursive;}
+        .estado-sellos-numero span { font-size: 18px; opacity: 0.5; font-family: 'Varela Round', sans-serif;}
+
+        /* --- BOTONES MODERNOS --- */
+        .btn-stack { display: flex; flex-direction: column; gap: 12px; width: 100%;}
+        .btn { width: 100%; padding: 18px; border-radius: 24px; border: none; font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; font-family: 'Varela Round', sans-serif; }
+        .btn-brand { background: var(--brand-gradient); color: var(--brand-light); box-shadow: 0 4px 15px rgba(53, 37, 26, 0.2); }
+        .btn-brand:active { transform: scale(0.98); box-shadow: 0 2px 8px rgba(53, 37, 26, 0.2); } 
+        .btn-gold { background-color: #D4AF37; color: #fff; display: none; box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3); }
+        .btn-gold:active { transform: scale(0.98); box-shadow: 0 2px 8px rgba(212, 175, 55, 0.3); }
+        .btn-outlined { background-color: transparent; border: 1.5px solid var(--border-warm); color: var(--text-secondary); padding: 14px; font-size: 14px;}
+        .btn-outlined:active { background-color: rgba(53,37,26,0.05); }
+        
+        #mensajeLoader { margin-top: 20px; color: var(--brand-dark); display: none; font-weight: 600; font-size: 14px; animation: titilar 1s infinite;}
+
+        /* =========================================
+           NUEVOS MODALES PERSONALIZADOS (ALERTS)
+           ========================================= */
+        .custom-modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(4px);
+            z-index: 3000; display: none; align-items: center; justify-content: center;
+            padding: 20px; box-sizing: border-box;
+        }
+        .custom-modal-box {
+            background: var(--card-white); border-radius: 24px; padding: 30px 20px;
+            width: 100%; max-width: 320px; text-align: center;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+            animation: modalPop 0.2s ease-out;
+        }
+        .custom-modal-text { color: var(--brand-dark); font-size: 16px; margin-bottom: 25px; font-weight: 600; }
+        .modal-btn-row { display: flex; gap: 10px; }
+        .btn-modal-ok { flex: 1; background: var(--brand-dark); color: var(--brand-light); border: none; padding: 14px; border-radius: 16px; font-weight: 600; font-family: 'Varela Round'; cursor: pointer; }
+        .btn-modal-cancel { flex: 1; background: transparent; color: var(--text-secondary); border: 1.5px solid var(--border-warm); padding: 14px; border-radius: 16px; font-weight: 600; font-family: 'Varela Round'; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+    <div id="modalAlertaCustom" class="custom-modal-overlay">
+        <div class="custom-modal-box">
+            <div id="textoAlertaCustom" class="custom-modal-text">Mensaje de error</div>
+            <button id="btnCerrarAlerta" class="btn-modal-ok">Aceptar</button>
+        </div>
+    </div>
+
+    <div id="modalConfirmCustom" class="custom-modal-overlay">
+        <div class="custom-modal-box">
+            <div id="textoConfirmCustom" class="custom-modal-text">¿Confirmas la entrega?</div>
+            <div class="modal-btn-row">
+                <button id="btnCancelarConfirm" class="btn-modal-cancel">Cancelar</button>
+                <button id="btnAceptarConfirm" class="btn-modal-ok">Confirmar</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="pantallaLogin">
+        <h2 style="font-family: 'Lilita One', cursive; color: var(--brand-dark); font-size: 32px;">BRUNA CAJA</h2>
+        <p style="color: var(--text-secondary); margin-bottom: 30px; font-size: 14px;">Ingresa el PIN para operar</p>
+        <input type="password" id="inputPin" class="pin-input" placeholder="****" maxlength="4" inputmode="numeric">
+        <button id="btnDesbloquear" class="btn btn-brand" style="max-width: 200px;">Desbloquear Caja</button>
+    </div>
+
+    <div class="main-container">
+        <div class="card-header" style="display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 15px; padding: 0 5px;">
+            <h1>BRUNA</h1>
+            <div style="font-size: 10px; color: var(--text-secondary); font-family: monospace; font-weight: bold;">SCANNER v1.4</div>
+        </div>
+
+        <div id="mensajeLoader">Buscando tarjeta...</div>
+
+        <div id="pantallaBusqueda" class="modern-card">
+            <p style="color: var(--text-secondary); font-size: 13px; margin-top: 0; margin-bottom: 20px;">Apunta al QR con la cámara</p>
+            
+            <div id="reader"></div>
+            
+            <div id="errorCamara" style="display: none; color: #E74C3C; font-size: 13px; margin-bottom: 20px;">
+                No se pudo activar la cámara. Por favor, usa la búsqueda manual.
+            </div>
+            
+            <div class="separador">o ingresa celular</div>
+            
+            <div class="input-manual-group">
+                <input type="tel" id="inputTelBusqueda" placeholder="Ej: 2215551234">
+                <button id="btnBuscarManual" class="btn-buscar-manual">Buscar Manualmente</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="pantallaAcciones">
+        <div class="acciones-content">
+            <div class="cliente-info-header">
+                <div class="cliente-avatar" id="uiAvatar">A</div>
+                <div class="cliente-textos">
+                    <div class="cliente-nombre" id="uiNombre">Nombre...</div>
+                    <span class="cliente-tel" id="uiTel">Teléfono...</span>
+                </div>
+            </div>
+
+            <div class="estado-sellos-container">
+                <div class="estado-sellos-texto">TAZAS SERVIDAS:</div>
+                <div class="estado-sellos-numero"><span id="uiSellos" style="font-size: 42px; opacity: 1;">0</span> <span>/10</span></div>
+            </div>
+
+            <div class="btn-stack">
+                <button id="btnSumar" class="btn btn-brand">+ Servir 1 Taza</button>
+                <button id="btnCanjear" class="btn btn-gold">☕ Entregar Premio</button>
+                
+                <div style="display: flex; gap: 10px; width: 100%; margin-top: 10px;">
+                    <button id="btnRestar" class="btn btn-outlined" style="flex: 1;">Corregir (-1)</button>
+                    <button id="btnVolver" class="btn btn-outlined" style="flex: 1; border-color: #FADBD8; color: #E74C3C;">Cerrar Ficha</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+        import { getFirestore, doc, getDoc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+
+        class BaristaApp {
+            constructor() {
+                const firebaseConfig = {
+                    apiKey: "AIzaSyCaqJraAXeZ8F4zCd9GUIdNIHhfU7FMzJk",
+                    authDomain: "club-cafe-app.firebaseapp.com",
+                    databaseURL: "https://club-cafe-app-default-rtdb.firebaseio.com",
+                    projectId: "club-cafe-app",
+                    storageBucket: "club-cafe-app.firebasestorage.app",
+                    messagingSenderId: "1007849307452",
+                    appId: "1:1007849307452:web:2472f6b2cab7deeae53239",
+                    measurementId: "G-6314S7TS0T"
+                };
+
+                this.app = initializeApp(firebaseConfig);
+                this.db = getFirestore(this.app);
+
+                this.html5QrCode = null;
+                this.clienteActualId = null;
+                this.puntosActuales = 0;
+                this.pinCorrecto = "2026"; 
+
+                this.ui = {
+                    login: document.getElementById('pantallaLogin'),
+                    busqueda: document.getElementById('pantallaBusqueda'),
+                    acciones: document.getElementById('pantallaAcciones'),
+                    loader: document.getElementById('mensajeLoader'),
+                    pinInput: document.getElementById('inputPin'),
+                    errorCamara: document.getElementById('errorCamara'),
+                    // Elementos de Modales Personalizados
+                    modalAlerta: document.getElementById('modalAlertaCustom'),
+                    textoAlerta: document.getElementById('textoAlertaCustom'),
+                    modalConfirm: document.getElementById('modalConfirmCustom'),
+                    textoConfirm: document.getElementById('textoConfirmCustom')
+                };
+
+                this.audioBeep = new Audio('data:audio/wav;base64,UklGRl9vT19XQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YU'); 
+
+                this.iniciarEventos();
+                this.verificarSeguridad();
+            }
+
+            // --- SISTEMA DE MODALES PERSONALIZADOS ---
+            mostrarAlerta(mensaje) {
+                this.ui.textoAlerta.innerText = mensaje;
+                this.ui.modalAlerta.style.display = 'flex';
+            }
+
+            mostrarConfirmacion(mensaje, callbackAceptar) {
+                this.ui.textoConfirm.innerText = mensaje;
+                this.ui.modalConfirm.style.display = 'flex';
+                
+                document.getElementById('btnAceptarConfirm').onclick = () => {
+                    this.ui.modalConfirm.style.display = 'none';
+                    callbackAceptar();
+                };
+                
+                document.getElementById('btnCancelarConfirm').onclick = () => {
+                    this.ui.modalConfirm.style.display = 'none';
+                };
+            }
+
+            iniciarEventos() {
+                // Evento cerrar alerta
+                document.getElementById('btnCerrarAlerta').addEventListener('click', () => {
+                    this.ui.modalAlerta.style.display = 'none';
+                });
+
+                document.getElementById('btnDesbloquear').addEventListener('click', () => this.verificarPin());
+                this.ui.pinInput.addEventListener('keypress', (e) => { if(e.key === 'Enter') this.verificarPin(); });
+                
+                document.getElementById('btnBuscarManual').addEventListener('click', () => {
+                    let tel = document.getElementById('inputTelBusqueda').value.replace(/\D/g,'');
+                    if(tel.length < 8) return this.mostrarAlerta("Número inválido. Ingrese al menos 8 dígitos.");
+                    this.pausarCamara();
+                    this.buscarClienteEnFirebase(tel);
+                });
+
+                document.getElementById('btnSumar').addEventListener('click', () => this.modificarSellos(1));
+                document.getElementById('btnRestar').addEventListener('click', () => this.modificarSellos(-1));
+                document.getElementById('btnCanjear').addEventListener('click', () => this.canjearPremio());
+                document.getElementById('btnVolver').addEventListener('click', () => this.volverABuscar());
+            }
+
+            reproducirBeep() { try { this.audioBeep.play().catch(e=>{}); } catch(e){} }
+            vibrar(patron) { if ("vibrate" in navigator) { navigator.vibrate(patron); } }
+
+            verificarSeguridad() {
+                if (localStorage.getItem('baristaAutorizado') === 'true') {
+                    this.ui.login.style.display = 'none';
+                    this.iniciarCamara();
+                }
+            }
+
+            verificarPin() {
+                const pinIngresado = this.ui.pinInput.value;
+                if (pinIngresado === this.pinCorrecto) {
+                    localStorage.setItem('baristaAutorizado', 'true');
+                    this.ui.login.style.display = 'none';
+                    this.iniciarCamara();
+                } else {
+                    this.ui.pinInput.classList.add('error-shake');
+                    this.vibrar([100, 50, 100]); 
+                    setTimeout(() => {
+                        this.ui.pinInput.classList.remove('error-shake');
+                        this.ui.pinInput.value = '';
+                    }, 400);
+                }
+            }
+
+            iniciarCamara() {
+                this.ui.errorCamara.style.display = 'none';
+                if (!this.html5QrCode) { this.html5QrCode = new Html5Qrcode("reader"); }
+                
+                this.html5QrCode.start(
+                    { facingMode: "environment" }, 
+                    { fps: 10, qrbox: { width: 180, height: 180 } },
+                    (decodedText) => this.onScanSuccess(decodedText),
+                    () => { }
+                ).catch((err) => {
+                    console.error("Fallo cámara: ", err);
+                    this.ui.errorCamara.style.display = 'block'; 
+                });
+            }
+
+            pausarCamara() {
+                if (this.html5QrCode && this.html5QrCode.isScanning) {
+                    this.html5QrCode.stop().catch(err => console.log(err));
+                }
+            }
+
+            onScanSuccess(decodedText) {
+                this.reproducirBeep();
+                this.vibrar(100);
+                this.pausarCamara();
+                this.buscarClienteEnFirebase(decodedText);
+            }
+
+            async buscarClienteEnFirebase(telefono) {
+                this.ui.busqueda.style.display = 'none';
+                this.ui.loader.style.display = 'block';
+
+                try {
+                    const docRef = doc(this.db, "clientes", telefono);
+                    const docSnap = await getDoc(docRef);
+
+                    if (docSnap.exists()) {
+                        const datos = docSnap.data();
+                        this.clienteActualId = telefono;
+                        this.puntosActuales = datos.puntos;
+                        
+                        document.getElementById('uiNombre').innerText = datos.nombre;
+                        document.getElementById('uiTel').innerText = telefono;
+                        document.getElementById('uiSellos').innerText = this.puntosActuales;
+                        document.getElementById('uiAvatar').innerText = datos.nombre.charAt(0).toUpperCase();
+
+                        this.actualizarBotonesAccion();
+
+                        this.ui.loader.style.display = 'none';
+                        this.ui.acciones.style.display = 'flex'; 
+                    } else {
+                        this.mostrarAlerta("Cliente no encontrado en la base de datos.");
+                        this.volverABuscar();
+                    }
+                } catch (error) {
+                    this.mostrarAlerta("Error de conexión con el servidor.");
+                    this.volverABuscar();
+                }
+            }
+
+            actualizarBotonesAccion() {
+                if(this.puntosActuales >= 10) {
+                    document.getElementById('btnSumar').style.display = 'none';
+                    document.getElementById('btnCanjear').style.display = 'block';
+                } else {
+                    document.getElementById('btnSumar').style.display = 'block';
+                    document.getElementById('btnCanjear').style.display = 'none';
+                }
+            }
+
+            async modificarSellos(cantidad) {
+                if(cantidad === -1 && this.puntosActuales <= 0) return;
+                if(cantidad === 1 && this.puntosActuales >= 10) return;
+
+                const btn = document.getElementById('btnSumar');
+                const btnOriginal = btn.innerText;
+                btn.innerText = "...";
+                btn.disabled = true;
+
+                try {
+                    const docRef = doc(this.db, "clientes", this.clienteActualId);
+                    await updateDoc(docRef, { puntos: increment(cantidad) });
+                    
+                    this.puntosActuales += cantidad;
+                    document.getElementById('uiSellos').innerText = this.puntosActuales;
+                    this.vibrar(50); 
+                    
+                    this.actualizarBotonesAccion();
+
+                } catch(e) {
+                    this.mostrarAlerta("Ocurrió un error al guardar el sello.");
+                } finally {
+                    btn.disabled = false;
+                    btn.innerText = btnOriginal;
+                }
+            }
+
+            canjearPremio() {
+                // Usamos nuestra nueva función de confirmación en lugar de confirm() nativo
+                this.mostrarConfirmacion("¿Confirmas la entrega de la bebida gratis?", async () => {
+                    try {
+                        const docRef = doc(this.db, "clientes", this.clienteActualId);
+                        const fechaAutomatica = new Date().toISOString(); 
+                        
+                        await updateDoc(docRef, { 
+                            puntos: 0,
+                            ultimoPremio: fechaAutomatica, 
+                            totalPremiosCanjeados: increment(1) 
+                        }); 
+                        
+                        this.vibrar([100, 50, 100, 50, 200]); 
+                        this.mostrarAlerta("¡Premio registrado correctamente!");
+                        this.volverABuscar(); 
+                    } catch(e) {
+                        this.mostrarAlerta("Error al reiniciar la tarjeta.");
+                    }
+                });
+            }
+
+            volverABuscar() {
+                this.ui.acciones.style.display = 'none';
+                this.ui.loader.style.display = 'none';
+                this.ui.busqueda.style.display = 'block';
+                document.getElementById('inputTelBusqueda').value = "";
+                this.clienteActualId = null;
+                this.iniciarCamara();
+            }
+        }
+
+        window.onload = () => {
+            window.miCaja = new BaristaApp(); 
+        };
+    </script>
+</body>
+</html>
