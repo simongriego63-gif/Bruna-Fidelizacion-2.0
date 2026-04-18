@@ -38,18 +38,17 @@
 
         /* --- PANTALLA 1: REGISTRO --- */
         #pantallaRegistro {
-        text-align: center; 
-         width: 100%; 
-        max-width: 360px; 
-        display: none;
-        background-color: #FDF9F0; /* Un crema suave, el que usás en la tarjeta */
-        padding: 40px 30px;
-        border-radius: 28px; 
-    /* Una sombra más sutil y color café para que no sea gris sucio */
-        box-shadow: 0 10px 40px rgba(53, 37, 26, 0.05); 
-        border: 1px solid rgba(230, 222, 213, 0.7);
-        box-sizing: border-box; /* Para asegurar que el padding no rompa el ancho */
-                            }
+            text-align: center; 
+            width: 100%; 
+            max-width: 360px; 
+            display: none;
+            background-color: #FDF9F0; 
+            padding: 40px 30px;
+            border-radius: 28px; 
+            box-shadow: 0 10px 40px rgba(53, 37, 26, 0.05); 
+            border: 1px solid rgba(230, 222, 213, 0.7);
+            box-sizing: border-box; 
+        }
         #pantallaRegistro h2 { font-family: 'Lilita One', cursive; color: var(--brand-dark); margin-top: 0; font-size: 32px; letter-spacing: 1px;}
         #pantallaRegistro p { color: var(--text-secondary); font-size: 14px; margin-bottom: 30px;}
         
@@ -57,23 +56,23 @@
         .input-group label { font-size: 12px; color: var(--text-secondary); font-weight: 600; margin-left: 5px; display: block; margin-bottom: 5px;}
         
         .input-box {
-        width: 100%; 
-        padding: 18px; 
-        border-radius: 14px; 
-        border: 1.5px solid var(--border-warm);
-        font-size: 16px; 
-        box-sizing: border-box; 
-        font-family: 'Poppins', sans-serif;
-        background-color: #FFFFFF; /* Blanco puro para que contraste con el fondo crema del contenedor */
-        transition: all 0.2s;
-                        }
+            width: 100%; 
+            padding: 18px; 
+            border-radius: 14px; 
+            border: 1.5px solid var(--border-warm);
+            font-size: 16px; 
+            box-sizing: border-box; 
+            font-family: 'Poppins', sans-serif;
+            background-color: #FFFFFF; 
+            transition: all 0.2s;
+        }
 
         .input-box:focus { 
-        border-color: var(--brand-dark); 
-        outline: none; 
-        background-color: #fff;
-        box-shadow: 0 0 0 4px rgba(53, 37, 26, 0.05); /* Un pequeño brillo al enfocar */
-                            }
+            border-color: var(--brand-dark); 
+            outline: none; 
+            background-color: #fff;
+            box-shadow: 0 0 0 4px rgba(53, 37, 26, 0.05); 
+        }
         
         .btn-crear {
             background: var(--brand-gradient); color: var(--brand-light); border: none;
@@ -103,7 +102,6 @@
         .front { transform: rotateY(0deg); }
         
         /* DORSO TARJETA */
-        /* DORSO TARJETA CON PATRÓN SUTIL DE CAFETERÍA */
         .back {
             transform: rotateY(180deg); 
             background: 
@@ -124,7 +122,7 @@
         @keyframes titilar { 0% {opacity:0.4;} 50% {opacity:1;} 100% {opacity:0.4;} }
         .texto-girar { text-align: center; font-size: 12px; color: var(--text-secondary); margin-bottom: 15px; font-weight: 600; animation: titilar 2s infinite; }
 
-        #pantallaTarjeta { width: 100%; max-width: 360px; display: none; }
+        #pantallaTarjeta { width: 100%; max-width: 360px; display: none; margin: 0 auto; }
         
         .wallet-card {
             background: var(--brand-gradient); border-radius: 28px; overflow: hidden;
@@ -179,12 +177,31 @@
         }
         .premio-listo { color: var(--brand-light) !important; animation: latidoPremio 1.5s infinite; }
 
+        /* --- QR SECTION ARREGLADO --- */
         .qr-section { display: flex; flex-direction: column; align-items: center; gap: 10px;}
-        .qr-box { background-color: var(--brand-light); padding: 12px; border-radius: 16px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
-        .qr-box img { display: block; width: 110px; height: 110px; mix-blend-mode: multiply; }
+        
+        .qr-box { 
+            background-color: var(--brand-light); /* Fondo crema liso */
+            padding: 10px; 
+            border-radius: 12px; 
+            box-shadow: inset 0 0 10px rgba(53, 37, 26, 0.1); /* Sombra interna super sutil */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .qr-box img { 
+            display: block; 
+            width: 110px; 
+            height: 110px; 
+            mix-blend-mode: multiply; /* Esto fusiona el color y mata bordes blancos */
+        }
+        
         .user-id { font-size: 11px; opacity: 0.7; letter-spacing: 1px; font-family: monospace; color: #fff;}
         
-        .btn-cerrar { margin-top: 30px; background: none; color: var(--text-secondary); border: none; width: 100%; text-decoration: underline; font-family: 'Poppins', sans-serif; font-size: 13px; cursor: pointer;}
+        /* --- BOTONES ARREGLADOS --- */
+        .btn-cerrar { margin-top: 20px; background: none; color: var(--text-secondary); border: none; width: 100%; text-decoration: underline; font-family: 'Poppins', sans-serif; font-size: 13px; cursor: pointer; display: block; text-align: center;}
+        
         #cargando { font-size: 16px; text-align: center; color: var(--text-secondary); font-weight: 600;}
 
         /* --- MODAL ALERTA PERSONALIZADO --- */
@@ -229,10 +246,6 @@
         </div>
         
         <button class="btn-crear" id="btnCrearTarjeta">Crear / Cargar Tarjeta</button>
-
-        <button id="btnInstalarApp" class="btn-cerrar" style="display: none; margin-top: 20px;">
-                Instalar BRUNA en el inicio
-        </button>
     </div>
 
     <div id="pantallaTarjeta">
@@ -275,11 +288,11 @@
                 </div>
             </div>
         </div>
-        </div>
-        <button id="btnInstalarApp" class="btn-cerrar" style="display: none; margin-top: 30px; margin-bottom: -15px;"> Instalar BRUNA en tu celular
+        
+        <button id="btnInstalarApp" class="btn-cerrar" style="display: none; margin-bottom: -10px;">
+            Instalar BRUNA en tu celular
         </button>
-    <button id="btnCerrarSesion" class="btn-cerrar">Cerrar sesión en este dispositivo</button>
-            </div> 
+        <button id="btnCerrarSesion" class="btn-cerrar">Cerrar sesión en este dispositivo</button>
     </div>
 
     <script type="module">
@@ -313,7 +326,6 @@
                     gridSellos: document.getElementById('gridSellos'),
                     puntos: document.getElementById('displayPuntos'),
                     premio: document.getElementById('displayPremio'),
-                    // Elementos del Modal
                     modalAlerta: document.getElementById('modalAlertaCustom'),
                     textoAlerta: document.getElementById('textoAlertaCustom')
                 };
@@ -326,13 +338,11 @@
                 document.getElementById('btnCrearTarjeta').addEventListener('click', () => this.ingresar());
                 document.getElementById('btnCerrarSesion').addEventListener('click', () => this.cerrarSesion());
                 
-                // Cerrar el modal al hacer clic en "Entendido"
                 document.getElementById('btnCerrarAlerta').addEventListener('click', () => {
                     this.ui.modalAlerta.style.display = 'none';
                 });
             }
 
-            // NUEVA FUNCIÓN: Mostrar Alertas Elegantes
             mostrarAlerta(mensaje) {
                 this.ui.textoAlerta.innerText = mensaje;
                 this.ui.modalAlerta.style.display = 'flex';
@@ -353,7 +363,6 @@
                 this.ui.tarjeta.style.display = pantalla === 'tarjeta' ? 'block' : 'none';
             }
 
-            // NUEVA FUNCIÓN: Formatear nombre (Primera en Mayúscula, resto minúscula)
             formatearNombre(texto) {
                 if (!texto) return "";
                 return texto.trim().toLowerCase().replace(/\b\w/g, letra => letra.toUpperCase());
@@ -361,7 +370,7 @@
 
             async ingresar() {
                 const nombreIngresado = document.getElementById('inputNombre').value;
-                const nombre = this.formatearNombre(nombreIngresado); // Aplicamos el formato aquí
+                const nombre = this.formatearNombre(nombreIngresado); 
                 let celular = document.getElementById('inputCelular').value.trim();
 
                 if(!nombre || !celular) return this.mostrarAlerta("Por favor completa tu nombre y número para continuar.");
@@ -398,13 +407,15 @@
             abrirTarjeta(celular) {
                 this.cambiarPantalla('tarjeta');
                 
+                // GENERACIÓN DEL QR CON COLORES ARREGLADOS
                 this.ui.qr.src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${celular}&bgcolor=F2E3A4&color=35251A`;
+                
                 this.ui.telLabel.innerText = `******${celular.slice(-4)}`;
 
                 this.unsubscribe = onSnapshot(doc(this.db, "clientes", celular), (docSnap) => {
                     if (docSnap.exists()) {
                         const datos = docSnap.data();
-                        this.ui.nombre.innerText = datos.nombre; // Ahora siempre se verá bien (Ej: Simon)
+                        this.ui.nombre.innerText = datos.nombre; 
                         this.renderizarTazas(datos.puntos);
                     } else {
                         this.cerrarSesion(); 
