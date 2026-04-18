@@ -177,14 +177,14 @@
         }
         .premio-listo { color: var(--brand-light) !important; animation: latidoPremio 1.5s infinite; }
 
-        /* --- QR SECTION ARREGLADO --- */
-        .qr-section { display: flex; flex-direction: column; align-items: center; gap: 10px;}
+        /* --- QR SECTION (BLOQUE SOLIDO) --- */
+        .qr-section { display: flex; flex-direction: column; align-items: center; gap: 12px;}
         
         .qr-box { 
-            background-color: var(--brand-light); /* Fondo crema liso */
-            padding: 10px; 
-            border-radius: 12px; 
-            box-shadow: inset 0 0 10px rgba(53, 37, 26, 0.1); /* Sombra interna super sutil */
+            background-color: var(--brand-light); 
+            padding: 12px; 
+            border-radius: 16px; 
+            box-shadow: 0 5px 15px rgba(53, 37, 26, 0.15); 
             display: flex;
             justify-content: center;
             align-items: center;
@@ -194,13 +194,31 @@
             display: block; 
             width: 110px; 
             height: 110px; 
-            mix-blend-mode: multiply; /* Esto fusiona el color y mata bordes blancos */
+            /* Se eliminó el mix-blend-mode para que no quede transparente */
         }
         
         .user-id { font-size: 11px; opacity: 0.7; letter-spacing: 1px; font-family: monospace; color: #fff;}
         
-        /* --- BOTONES ARREGLADOS --- */
-        .btn-cerrar { margin-top: 20px; background: none; color: var(--text-secondary); border: none; width: 100%; text-decoration: underline; font-family: 'Poppins', sans-serif; font-size: 13px; cursor: pointer; display: block; text-align: center;}
+        /* --- BOTONES --- */
+        .btn-instalar {
+            background: var(--brand-dark); 
+            color: var(--brand-light); 
+            border: none;
+            padding: 16px; 
+            width: 100%; 
+            border-radius: 16px; 
+            font-size: 15px;
+            font-weight: 600; 
+            cursor: pointer; 
+            margin-top: 30px; 
+            margin-bottom: -10px;
+            font-family: 'Poppins', sans-serif;
+            box-shadow: 0 8px 20px rgba(53, 37, 26, 0.2); 
+            transition: transform 0.1s;
+        }
+        .btn-instalar:active { transform: scale(0.97); }
+
+        .btn-cerrar { margin-top: 25px; background: none; color: var(--text-secondary); border: none; width: 100%; text-decoration: underline; font-family: 'Poppins', sans-serif; font-size: 13px; cursor: pointer; display: block; text-align: center;}
         
         #cargando { font-size: 16px; text-align: center; color: var(--text-secondary); font-weight: 600;}
 
@@ -289,8 +307,8 @@
             </div>
         </div>
         
-        <button id="btnInstalarApp" class="btn-cerrar" style="display: none; margin-bottom: -10px;">
-            Instalar BRUNA en tu celular
+        <button id="btnInstalarApp" class="btn-instalar" style="display: none;">
+            📱 Instalar App
         </button>
         <button id="btnCerrarSesion" class="btn-cerrar">Cerrar sesión en este dispositivo</button>
     </div>
@@ -407,7 +425,7 @@
             abrirTarjeta(celular) {
                 this.cambiarPantalla('tarjeta');
                 
-                // GENERACIÓN DEL QR CON COLORES ARREGLADOS
+                // GENERACIÓN DEL QR CON COLORES ARREGLADOS (FONDO CREMA, PUNTOS MARRONES)
                 this.ui.qr.src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${celular}&bgcolor=F2E3A4&color=35251A`;
                 
                 this.ui.telLabel.innerText = `******${celular.slice(-4)}`;
