@@ -38,11 +38,18 @@
 
         /* --- PANTALLA 1: REGISTRO --- */
         #pantallaRegistro {
-            text-align: center; width: 100%; max-width: 360px; display: none;
-            background-color: var(--card-white); padding: 40px 30px;
-            border-radius: 28px; box-shadow: 0 10px 30px rgba(53, 37, 26, 0.08);
-            border: 1px solid rgba(230, 222, 213, 0.5);
-        }
+        text-align: center; 
+         width: 100%; 
+        max-width: 360px; 
+        display: none;
+        background-color: #FDF9F0; /* Un crema suave, el que usás en la tarjeta */
+        padding: 40px 30px;
+        border-radius: 28px; 
+    /* Una sombra más sutil y color café para que no sea gris sucio */
+        box-shadow: 0 10px 40px rgba(53, 37, 26, 0.05); 
+        border: 1px solid rgba(230, 222, 213, 0.7);
+        box-sizing: border-box; /* Para asegurar que el padding no rompa el ancho */
+                            }
         #pantallaRegistro h2 { font-family: 'Lilita One', cursive; color: var(--brand-dark); margin-top: 0; font-size: 32px; letter-spacing: 1px;}
         #pantallaRegistro p { color: var(--text-secondary); font-size: 14px; margin-bottom: 30px;}
         
@@ -50,11 +57,23 @@
         .input-group label { font-size: 12px; color: var(--text-secondary); font-weight: 600; margin-left: 5px; display: block; margin-bottom: 5px;}
         
         .input-box {
-            width: 100%; padding: 18px; border-radius: 14px; border: 1.5px solid var(--border-warm);
-            font-size: 16px; box-sizing: border-box; font-family: 'Poppins', sans-serif;
-            background-color: #FFFDF7; transition: border-color 0.2s;
-        }
-        .input-box:focus { border-color: var(--brand-dark); outline: none; background-color: #fff;}
+        width: 100%; 
+        padding: 18px; 
+        border-radius: 14px; 
+        border: 1.5px solid var(--border-warm);
+        font-size: 16px; 
+        box-sizing: border-box; 
+        font-family: 'Poppins', sans-serif;
+        background-color: #FFFFFF; /* Blanco puro para que contraste con el fondo crema del contenedor */
+        transition: all 0.2s;
+                        }
+
+        .input-box:focus { 
+        border-color: var(--brand-dark); 
+        outline: none; 
+        background-color: #fff;
+        box-shadow: 0 0 0 4px rgba(53, 37, 26, 0.05); /* Un pequeño brillo al enfocar */
+                            }
         
         .btn-crear {
             background: var(--brand-gradient); color: var(--brand-light); border: none;
@@ -256,8 +275,11 @@
                 </div>
             </div>
         </div>
-        
-        <button id="btnCerrarSesion" class="btn-cerrar">Cerrar sesión en este dispositivo</button>
+        </div>
+        <button id="btnInstalarApp" class="btn-cerrar" style="display: none; margin-top: 30px; margin-bottom: -15px;"> Instalar BRUNA en tu celular
+        </button>
+    <button id="btnCerrarSesion" class="btn-cerrar">Cerrar sesión en este dispositivo</button>
+            </div> 
     </div>
 
     <script type="module">
